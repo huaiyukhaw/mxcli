@@ -43,7 +43,8 @@ fork-tools/generate-skillmd.sh
 fork-tools/generate-skillmd.sh
 
 # Personal/global scope — discovered in every project on this machine, never committed:
-fork-tools/generate-skillmd.sh --dest ~/.claude/skills
+fork-tools/install-global.sh                 # -> ~/.claude/skills
+fork-tools/install-global.sh /custom/path    # -> a custom personal skills dir
 ```
 
 ## Notes

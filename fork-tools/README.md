@@ -21,6 +21,7 @@ would proceed without the right reference (a common cause of invalid MDL).
 |------|---------|
 | `skill-descriptions.tsv` | Curated `name` + `description` for every skill. **Source of truth for descriptions.** Edit this. |
 | `generate-skillmd.sh` | Wraps each flat skill into a discoverable `.claude/skills/<name>/SKILL.md`. Idempotent & safe. |
+| `install-global.sh` | One-liner that installs the skills into `~/.claude/skills` (every project on this machine). |
 | `REGENERATE-SKILLS-PROMPT.md` | Mechanical steps + an LLM prompt to refresh after the maintainer adds skills. |
 
 ## What it generated
@@ -33,8 +34,14 @@ inlined. Mendix skills are prefixed `mendix-` to avoid clashing with the dev ski
 ```bash
 fork-tools/generate-skillmd.sh            # (re)generate into .claude/skills/  (project scope)
 fork-tools/generate-skillmd.sh --check    # audit: list flat sources missing a description
-fork-tools/generate-skillmd.sh --dest ~/.claude/skills   # install globally for every project
+fork-tools/install-global.sh              # install into ~/.claude/skills (every project)
+fork-tools/install-global.sh /custom/dir  # ...or a custom personal skills dir
 ```
+
+Global install is the recommended setup for personal use: run `fork-tools/install-global.sh` once,
+and these skills are discoverable in every Mendix project you open — re-run it after pulling new
+skills from upstream. It only touches its own marker-tagged directories, so other personal skills in
+`~/.claude/skills` are left alone.
 
 ## Design choices (so it stays sync-friendly)
 
