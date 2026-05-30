@@ -2,7 +2,7 @@
 name: mendix-xpath-constraints
 description: "Use when writing XPath constraint expressions in RETRIEVE WHERE clauses, page data sources, or security rules — association paths, nested predicates, functions."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # XPath Constraints in MDL
 

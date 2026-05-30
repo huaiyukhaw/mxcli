@@ -2,7 +2,7 @@
 name: mendix-verify-with-oql
 description: "Use when verifying microflow side effects and data changes with OQL queries against a running Mendix app."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Verify with OQL Skill
 

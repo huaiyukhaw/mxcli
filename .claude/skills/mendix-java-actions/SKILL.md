@@ -2,7 +2,7 @@
 name: mendix-java-actions
 description: "Use when creating or calling custom Java actions in Mendix projects via MDL."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Mendix Java Actions Skill
 

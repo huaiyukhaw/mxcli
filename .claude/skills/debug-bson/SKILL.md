@@ -2,7 +2,7 @@
 name: debug-bson
 description: "Use when debugging BSON serialization errors while programmatically creating Mendix pages and widgets — Studio Pro crashes such as \"Sequence contains no matching element\" at MprObject/MprProperty, or CE0463 widget-definition errors. Systematic diff workflow using the mx tool."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Debug BSON Serialization Issues
 

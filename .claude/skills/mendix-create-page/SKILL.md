@@ -2,7 +2,7 @@
 name: mendix-create-page
 description: "Use when writing CREATE PAGE statements — page and widget MDL syntax reference."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # CREATE PAGE - MDL Syntax Guide
 

@@ -2,7 +2,7 @@
 name: mendix-write-lint-rules
 description: "Use when writing custom Starlark lint rules (.star) in .claude/lint-rules/ that run with mxcli lint."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Writing Custom Starlark Lint Rules
 

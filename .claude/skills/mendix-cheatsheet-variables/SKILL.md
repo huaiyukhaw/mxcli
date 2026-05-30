@@ -2,7 +2,7 @@
 name: mendix-cheatsheet-variables
 description: "Use when declaring variables in MDL microflows or fixing variable-declaration errors — quick syntax reference."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # MDL Variable Cheatsheet
 

@@ -2,7 +2,7 @@
 name: mendix-catalog-search
 description: "Use when searching the external Mendix Catalog service registry (catalog.mendix.com via mxcli catalog search). Requires platform auth. Not the MDL CATALOG keyword."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Catalog Search (Mendix Platform Service Registry)
 

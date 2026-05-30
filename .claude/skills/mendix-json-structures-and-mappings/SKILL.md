@@ -2,7 +2,7 @@
 name: mendix-json-structures-and-mappings
 description: "Use when creating or describing JSON structures, import mappings, and export mappings in MDL, and mapping JSON to entities."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # JSON Structures, Import Mappings & Export Mappings
 

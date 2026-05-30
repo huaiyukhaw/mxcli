@@ -2,7 +2,7 @@
 name: mendix-rest-call-from-json
 description: "Use when generating the full REST integration stack from a JSON payload — JSON Structure → entities → import mapping → microflow (inline REST CALL approach)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # REST Call from JSON Payload — End-to-End Skill
 

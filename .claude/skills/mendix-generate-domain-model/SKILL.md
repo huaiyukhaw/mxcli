@@ -2,7 +2,7 @@
 name: mendix-generate-domain-model
 description: "Use when generating a full Mendix domain model (entities, attributes, associations, enumerations) in MDL and validating it with the linter."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Creating Mendix Domain Model MDL Scripts
 

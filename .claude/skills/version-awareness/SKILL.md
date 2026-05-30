@@ -2,7 +2,7 @@
 name: version-awareness
 description: "Use before generating any MDL — check the project's Mendix version (show features) so you never emit syntax the project cannot support. Read first for version-gated features."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Version Awareness
 

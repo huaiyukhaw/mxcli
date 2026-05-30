@@ -9,8 +9,8 @@
 # other personal skills you already have in ~/.claude/skills are left untouched.
 #
 # Usage:
-#   fork-tools/install-global.sh                 # -> ~/.claude/skills
-#   fork-tools/install-global.sh /custom/path    # -> /custom/path
+#   tools/install-global.sh                 # -> ~/.claude/skills
+#   tools/install-global.sh /custom/path    # -> /custom/path
 #
 # Re-run after pulling new skills from upstream (see REGENERATE-SKILLS-PROMPT.md).
 
@@ -23,4 +23,4 @@ echo "Installing mxcli skills into: $DEST"
 echo
 echo "Done. These skills are now discoverable by Claude Code in any project on this machine."
 echo "To remove them later, delete the marker-tagged directories under $DEST"
-echo "(each generated SKILL.md contains: 'generated-by: fork-tools/generate-skillmd.sh')."
+echo "(each generated SKILL.md contains: 'generated-by: generate-skillmd.sh')."

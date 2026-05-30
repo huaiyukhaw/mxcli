@@ -2,7 +2,7 @@
 name: mendix-manage-security
 description: "Use when configuring Mendix security via MDL — module/user roles, access rules (microflows, pages, entities), project security settings, demo users, GRANT/REVOKE."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Security Management Skill
 

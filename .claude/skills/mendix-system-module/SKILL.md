@@ -2,7 +2,7 @@
 name: mendix-system-module
 description: "Use when referencing built-in Mendix System module entities (users, files, workflows, task queues, HTTP) in microflows, pages, associations, or Java actions."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Mendix System Module Reference
 

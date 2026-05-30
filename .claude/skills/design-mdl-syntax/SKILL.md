@@ -2,7 +2,7 @@
 name: design-mdl-syntax
 description: "Use before designing new MDL syntax — grammar rules, AST types, or executor code for a new document type, microflow action, or operation. Covers design guardrails, standard verb patterns, and anti-patterns."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Design New MDL Syntax
 

@@ -2,7 +2,7 @@
 name: mendix-cheatsheet-errors
 description: "Use when debugging common MDL syntax errors — quick symptom-to-fix lookups for variable, entity, and association mistakes."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # MDL Common Errors Cheatsheet
 

@@ -2,7 +2,7 @@
 name: mendix-database-connections
 description: "Use when setting up external database connections (Oracle, PostgreSQL, MySQL, SQL Server) via the Mendix External Database Connector and mapping SQL results to non-persistent entities."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Skill: Create External Database Connections
 

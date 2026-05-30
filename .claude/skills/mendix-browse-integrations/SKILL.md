@@ -2,7 +2,7 @@
 name: mendix-browse-integrations
 description: "Use when discovering external services and querying integration assets via the MDL CATALOG keyword (SELECT ... FROM CATALOG.*). Not the external Mendix Catalog CLI."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Browse Integration Services and Contracts
 

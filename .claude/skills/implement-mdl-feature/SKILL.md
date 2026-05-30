@@ -2,7 +2,7 @@
 name: implement-mdl-feature
 description: "Use when implementing a new MDL feature end-to-end — a new Mendix action type, page widget, or document type — across grammar, AST, visitor, executor, and backend."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Implement New MDL Feature Skill
 

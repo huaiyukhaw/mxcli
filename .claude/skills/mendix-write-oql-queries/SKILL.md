@@ -2,7 +2,7 @@
 name: mendix-write-oql-queries
 description: "Use when creating VIEW entities — correct OQL query syntax that executes in the Mendix runtime."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Skill: Write OQL Queries for Mendix VIEW Entities
 

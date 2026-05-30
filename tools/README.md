@@ -1,4 +1,4 @@
-# fork-tools/
+# tools/
 
 Personal tooling for this fork of `huaiyukhaw/mxcli`. Adds nothing to upstream behaviour — it only
 makes mxcli's existing skill docs **discoverable** by Claude Code.
@@ -32,13 +32,13 @@ inlined. Mendix skills are prefixed `mendix-` to avoid clashing with the dev ski
 `debug-bson` vs `mendix-debug-bson`).
 
 ```bash
-fork-tools/generate-skillmd.sh            # (re)generate into .claude/skills/  (project scope)
-fork-tools/generate-skillmd.sh --check    # audit: list flat sources missing a description
-fork-tools/install-global.sh              # install into ~/.claude/skills (every project)
-fork-tools/install-global.sh /custom/dir  # ...or a custom personal skills dir
+tools/generate-skillmd.sh            # (re)generate into .claude/skills/  (project scope)
+tools/generate-skillmd.sh --check    # audit: list flat sources missing a description
+tools/install-global.sh              # install into ~/.claude/skills (every project)
+tools/install-global.sh /custom/dir  # ...or a custom personal skills dir
 ```
 
-Global install is the recommended setup for personal use: run `fork-tools/install-global.sh` once,
+Global install is the recommended setup for personal use: run `tools/install-global.sh` once,
 and these skills are discoverable in every Mendix project you open — re-run it after pulling new
 skills from upstream. It only touches its own marker-tagged directories, so other personal skills in
 `~/.claude/skills` are left alone.
@@ -51,15 +51,15 @@ skills from upstream. It only touches its own marker-tagged directories, so othe
   only marker-tagged directories before regenerating. It never deletes anything it didn't create.
 - **Descriptions live in the manifest, not the generated files** — so re-running after the
   maintainer edits a skill's *content* preserves your curated "Use when…" triggers.
-- **Tooling is isolated in `fork-tools/`** (a directory that doesn't exist upstream), the same
-  fork-safety pattern as `fork-review/`.
+- **Tooling is isolated in `tools/`** (a directory that doesn't exist upstream), so it adds no
+  merge friction when syncing from the upstream repo.
 
 ## When the maintainer adds new skills
 
-1. `fork-tools/generate-skillmd.sh --check` → lists any flat skill with no description.
+1. `tools/generate-skillmd.sh --check` → lists any flat skill with no description.
 2. Add a line to `skill-descriptions.tsv` (or paste the prompt in `REGENERATE-SKILLS-PROMPT.md`
    to have Claude write the descriptions).
-3. `fork-tools/generate-skillmd.sh` → regenerates the discoverable tree.
+3. `tools/generate-skillmd.sh` → regenerates the discoverable tree.
 
 ## Note on the generated directories
 

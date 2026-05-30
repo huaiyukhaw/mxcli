@@ -2,7 +2,7 @@
 name: svg-sketch-style
 description: "Use when hand-building SVG diagrams rendered in the VS Code extension webviews (ELK system overview or any new SVG). Enforces the sketch / proof-of-concept visual style."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # SVG Sketch Style Guide — PoC Diagrams
 

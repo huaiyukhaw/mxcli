@@ -7,8 +7,8 @@
 # - <description> is the discovery trigger Claude reads to decide whether to load the skill.
 #   Keep it third-person and lead with "Use when…".
 #
-# Regenerate the SKILL.md tree with:  fork-tools/generate-skillmd.sh
-# Add new skills:  see fork-tools/REGENERATE-SKILLS-PROMPT.md
+# Regenerate the SKILL.md tree with:  tools/generate-skillmd.sh
+# Add new skills:  see tools/REGENERATE-SKILLS-PROMPT.md
 
 # ---- Top-level repo / contributor skills (.claude/skills/*.md) ----
 debug-bson	.claude/skills/debug-bson.md	Use when debugging BSON serialization errors while programmatically creating Mendix pages and widgets — Studio Pro crashes such as "Sequence contains no matching element" at MprObject/MprProperty, or CE0463 widget-definition errors. Systematic diff workflow using the mx tool.

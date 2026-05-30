@@ -2,7 +2,7 @@
 name: mendix-write-microflows
 description: "Use before writing any microflow — comprehensive microflow MDL syntax, common mistakes, and validation checklist."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Mendix Microflow Skill
 

@@ -2,7 +2,7 @@
 name: mendix-rest-client
 description: "Use when integrating with external REST APIs from Mendix microflows — covers the three calling approaches."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # REST Integration Skill
 

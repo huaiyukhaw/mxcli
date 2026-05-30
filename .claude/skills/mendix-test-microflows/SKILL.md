@@ -2,7 +2,7 @@
 name: mendix-test-microflows
 description: "Use for testing work — writing and running MDL-based microflow tests with mxcli test (.test.mdl/.test.md; requires Docker)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Test Microflows Skill
 

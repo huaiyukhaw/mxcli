@@ -2,7 +2,7 @@
 name: mendix-business-events
 description: "Use when defining event-driven APIs with business events over Kafka or message brokers (SHOW/DESCRIBE/CREATE/DROP)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Business Events
 

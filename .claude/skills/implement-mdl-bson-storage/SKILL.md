@@ -2,7 +2,7 @@
 name: implement-mdl-bson-storage
 description: "Use when implementing new MDL commands that read from or write to MPR files — full stack from grammar to BSON serialization, including storage-name gotchas."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Implement MDL with BSON Storage
 

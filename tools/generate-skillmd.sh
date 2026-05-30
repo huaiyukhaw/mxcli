@@ -6,26 +6,30 @@
 # frontmatter (the `description` is what Claude reads to decide when to load a skill).
 # mxcli ships its skills as flat `.md` files (e.g. .claude/skills/mendix/write-microflows.md),
 # which are NOT discovered. This script wraps each flat source into a discoverable
-# `<root>/<name>/SKILL.md`, pulling a curated description from fork-tools/skill-descriptions.tsv.
+# `<root>/<name>/SKILL.md`, pulling a curated description from tools/skill-descriptions.tsv.
 #
 # It is IDEMPOTENT and SAFE: it only ever removes/overwrites directories it created itself
 # (tagged with a marker), and it never modifies the upstream-tracked flat source files.
 #
 # Usage:
-#   fork-tools/generate-skillmd.sh                 # generate into .claude/skills/ (project scope)
-#   fork-tools/generate-skillmd.sh --dest ~/.claude/skills   # personal/global scope
-#   fork-tools/generate-skillmd.sh --check         # audit only: list sources missing a manifest entry
+#   tools/generate-skillmd.sh                 # generate into .claude/skills/ (project scope)
+#   tools/generate-skillmd.sh --dest ~/.claude/skills   # personal/global scope
+#   tools/generate-skillmd.sh --check         # audit only: list sources missing a manifest entry
 #
 # After the repo maintainer adds new flat skills, add their descriptions to the manifest
-# (see fork-tools/REGENERATE-SKILLS-PROMPT.md) and re-run this script.
+# (see tools/REGENERATE-SKILLS-PROMPT.md) and re-run this script.
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MANIFEST="$REPO_ROOT/fork-tools/skill-descriptions.tsv"
+MANIFEST="$REPO_ROOT/tools/skill-descriptions.tsv"
 DEST="$REPO_ROOT/.claude/skills"
 CHECK_ONLY=0
-MARKER="<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->"
+# MARKER_TOKEN is a stable, path-independent string used to recognise our own generated files
+# (so renaming this tools/ directory never orphans previously generated skills). MARKER is the
+# full comment written into each SKILL.md; it must contain MARKER_TOKEN.
+MARKER_TOKEN="generated-by: generate-skillmd.sh"
+MARKER="<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->"
 
 # Source skill globs (relative to repo root). README.md is an index, not a skill.
 SOURCE_GLOBS=(
@@ -76,7 +80,7 @@ done < <(all_sources)
 if [ "$missing" -gt 0 ]; then
   echo "" >&2
   echo "$missing source skill(s) have no description in $MANIFEST." >&2
-  echo "Add them (see fork-tools/REGENERATE-SKILLS-PROMPT.md), then re-run." >&2
+  echo "Add them (see tools/REGENERATE-SKILLS-PROMPT.md), then re-run." >&2
 fi
 
 if [ "$CHECK_ONLY" -eq 1 ]; then
@@ -87,7 +91,7 @@ fi
 # ---- 2. clean previously generated dirs (only those carrying our marker) ----
 if [ -d "$DEST" ]; then
   while IFS= read -r skillfile; do
-    if grep -qF "$MARKER" "$skillfile" 2>/dev/null; then
+    if grep -qF "$MARKER_TOKEN" "$skillfile" 2>/dev/null; then
       rm -rf "$(dirname "$skillfile")"
     fi
   done < <(find "$DEST" -mindepth 2 -maxdepth 2 -name SKILL.md 2>/dev/null)

@@ -2,7 +2,7 @@
 name: mendix-assess-quality
 description: "Use when performing a comprehensive quality assessment of a Mendix project against best practices (naming, security, performance, maintainability, architecture)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Assess Mendix Project Quality
 

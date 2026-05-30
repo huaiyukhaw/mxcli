@@ -2,7 +2,7 @@
 name: mendix-validation-microflows
 description: "Use when creating validation microflows that validate user input on NewEdit pages and return feedback."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Validation Microflows Skill
 

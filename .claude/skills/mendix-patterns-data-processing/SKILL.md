@@ -2,7 +2,7 @@
 name: mendix-patterns-data-processing
 description: "Use when processing lists of data — loops, aggregates, batch processing, delta merge, and list-operation patterns. Read before writing list-processing microflows."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Data Processing Patterns
 

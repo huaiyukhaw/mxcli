@@ -2,7 +2,7 @@
 name: mendix-run-app
 description: "Use when building and starting the Mendix app in Docker."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Run App Skill
 

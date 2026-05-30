@@ -2,7 +2,7 @@
 name: mendix-manage-navigation
 description: "Use when inspecting or modifying navigation profiles — home pages, menu items, login pages, role-based routing."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Navigation Management Skill
 

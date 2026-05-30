@@ -2,7 +2,7 @@
 name: mendix-migrate-oracle-forms
 description: "Use when assessing or migrating Oracle Forms applications to Mendix with MDL."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Oracle Forms to Mendix Migration Skill
 

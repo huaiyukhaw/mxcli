@@ -2,7 +2,7 @@
 name: mendix-check-syntax
 description: "Use before presenting or executing any MDL script — pre-flight validation checklist with mxcli check (and --references)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # MDL Syntax Validation Skill
 

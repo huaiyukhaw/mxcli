@@ -2,7 +2,7 @@
 name: mendix-odata-data-sharing
 description: "Use when sharing data between Mendix apps via OData services, using view entities to decouple the API contract from the domain model."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # OData Data Sharing Between Mendix Apps
 

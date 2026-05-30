@@ -2,7 +2,7 @@
 name: mendix-resolve-forward-references
 description: "Use when an MDL script fails because it references a document created later in the same script — ordering and forward-reference resolution."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Resolving Forward References in MDL Scripts
 

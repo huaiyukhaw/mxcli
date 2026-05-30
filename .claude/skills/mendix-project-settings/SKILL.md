@@ -2,7 +2,7 @@
 name: mendix-project-settings
 description: "Use when configuring project settings — database connections, constants, runtime settings (SHOW/DESCRIBE/ALTER)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Project Settings
 

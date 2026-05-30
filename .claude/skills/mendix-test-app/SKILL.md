@@ -2,7 +2,7 @@
 name: mendix-test-app
 description: "Use when verifying a running Mendix app end-to-end with playwright-cli browser automation and mxcli oql data assertions."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Test App Skill
 

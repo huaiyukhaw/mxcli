@@ -2,7 +2,7 @@
 name: mendix-overview-pages
 description: "Use when building standard CRUD overview and edit pages (list/grid pattern with navigation snippet)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Overview Pages - CRUD Page Pattern
 

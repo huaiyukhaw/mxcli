@@ -2,7 +2,7 @@
 name: mendix-master-detail-pages
 description: "Use when building master-detail page layouts (selectable master list plus detail panel)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Master-Detail Pages
 

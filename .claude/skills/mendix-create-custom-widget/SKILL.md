@@ -2,7 +2,7 @@
 name: mendix-create-custom-widget
 description: "Use when building a Mendix pluggable widget from scratch with React + TypeScript, producing a .mpk for Studio Pro."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Create Custom Pluggable Widget
 

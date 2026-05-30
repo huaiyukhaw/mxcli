@@ -2,7 +2,7 @@
 name: mendix-agents
 description: "Use when creating or managing Mendix AI Agent documents (Agent, Model, Knowledge Base, Consumed MCP Service) stored as JSON in the MPR. Requires AgentEditorCommons, Mendix 11.9+."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Agents
 

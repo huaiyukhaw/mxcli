@@ -2,7 +2,7 @@
 name: mendix-bulk-widget-updates
 description: "Use when discovering and bulk-editing widget properties across many pages/snippets with show widgets / update widgets (experimental; dry run first)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Bulk Widget Property Updates
 

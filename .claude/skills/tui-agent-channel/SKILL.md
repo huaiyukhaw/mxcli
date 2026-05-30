@@ -2,7 +2,7 @@
 name: tui-agent-channel
 description: "Use when sending MDL commands to a running mxcli TUI over its Unix socket so agent actions simulate visible, interruptible user operations."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 
 # TUI Agent Channel

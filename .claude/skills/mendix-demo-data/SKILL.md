@@ -2,7 +2,7 @@
 name: mendix-demo-data
 description: "Use for any database/import or demo-data work — connect to the Mendix app's PostgreSQL directly, understand the Mendix ID system and association storage, and seed data."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Skill: Connect to Application Database and Generate Demo Data
 

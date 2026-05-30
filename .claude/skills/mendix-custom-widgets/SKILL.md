@@ -2,7 +2,7 @@
 name: mendix-custom-widgets
 description: "Use when writing MDL for GALLERY, COMBOBOX, DataGrid2, or other built-in/third-party pluggable widgets in CREATE PAGE / ALTER PAGE, including child slots and adding new widgets via .def.json."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 
 # Custom & Pluggable Widgets in MDL

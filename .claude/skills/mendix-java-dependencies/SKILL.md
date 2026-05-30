@@ -2,7 +2,7 @@
 name: mendix-java-dependencies
 description: "Use when adding, updating, or removing Maven/JAR dependencies for a Mendix module (Studio Pro Module Settings → Java dependencies)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Managing Maven / JAR Dependencies
 

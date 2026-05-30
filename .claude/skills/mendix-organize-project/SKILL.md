@@ -2,7 +2,7 @@
 name: mendix-organize-project
 description: "Use when organizing project documents into folders or moving pages/microflows/snippets between folders and modules (MOVE command)."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Project Organization: Folders and Moving Documents
 

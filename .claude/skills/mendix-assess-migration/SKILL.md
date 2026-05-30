@@ -2,7 +2,7 @@
 name: mendix-assess-migration
 description: "Use when investigating an existing non-Mendix application to produce a structured assessment for migrating it to Mendix."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Migration Assessment: Investigating Non-Mendix Projects
 

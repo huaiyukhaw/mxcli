@@ -2,7 +2,7 @@
 name: test-mdl
 description: "Use when testing MDL scripts against the ModelSDK Go implementation and verifying they open correctly in Studio Pro, especially after adding BSON serialization for a new document type."
 ---
-<!-- generated-by: fork-tools/generate-skillmd.sh (edit fork-tools/skill-descriptions.tsv, not this file) -->
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
 
 # Test MDL Script
 
