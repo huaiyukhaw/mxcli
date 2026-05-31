@@ -1,0 +1,76 @@
+# Skill description manifest — curated frontmatter for SKILL.md generation
+#
+# Format (TAB-separated):  <skill-name><TAB><source-path-relative-to-repo-root><TAB><description>
+# - Lines starting with # and blank lines are ignored.
+# - <skill-name> must be lowercase letters/digits/hyphens (Claude Code skill-name rule).
+# - mendix/* skills are prefixed `mendix-` to avoid clashes with top-level dev skills.
+# - <description> is the discovery trigger Claude reads to decide whether to load the skill.
+#   Keep it third-person and lead with "Use when…".
+#
+# Regenerate the SKILL.md tree with:  tools/generate-skillmd.sh
+# Add new skills:  see tools/REGENERATE-SKILLS-PROMPT.md
+
+# ---- Top-level repo / contributor skills (.claude/skills/*.md) ----
+debug-bson	.claude/skills/debug-bson.md	Use when debugging BSON serialization errors while programmatically creating Mendix pages and widgets — Studio Pro crashes such as "Sequence contains no matching element" at MprObject/MprProperty, or CE0463 widget-definition errors. Systematic diff workflow using the mx tool.
+design-mdl-syntax	.claude/skills/design-mdl-syntax.md	Use before designing new MDL syntax — grammar rules, AST types, or executor code for a new document type, microflow action, or operation. Covers design guardrails, standard verb patterns, and anti-patterns.
+fix-issue	.claude/skills/fix-issue.md	Use when diagnosing and fixing a bug in mxcli itself. Fast-path symptom-to-file table that routes you to the right layer before opening files.
+implement-mdl-feature	.claude/skills/implement-mdl-feature.md	Use when implementing a new MDL feature end-to-end — a new Mendix action type, page widget, or document type — across grammar, AST, visitor, executor, and backend.
+svg-sketch-style	.claude/skills/svg-sketch-style.md	Use when hand-building SVG diagrams rendered in the VS Code extension webviews (ELK system overview or any new SVG). Enforces the sketch / proof-of-concept visual style.
+test-mdl	.claude/skills/test-mdl.md	Use when testing MDL scripts against the ModelSDK Go implementation and verifying they open correctly in Studio Pro, especially after adding BSON serialization for a new document type.
+tui-agent-channel	.claude/skills/tui-agent-channel.md	Use when sending MDL commands to a running mxcli TUI over its Unix socket so agent actions simulate visible, interruptible user operations.
+version-awareness	.claude/skills/version-awareness.md	Use before generating any MDL — check the project's Mendix version (show features) so you never emit syntax the project cannot support. Read first for version-gated features.
+implement-mdl-bson-storage	.claude/skills/implement-mdl-bson	Use when implementing new MDL commands that read from or write to MPR files — full stack from grammar to BSON serialization, including storage-name gotchas.
+
+# ---- Mendix MDL skills (.claude/skills/mendix/*.md) ----
+mendix-agents	.claude/skills/mendix/agents.md	Use when creating or managing Mendix AI Agent documents (Agent, Model, Knowledge Base, Consumed MCP Service) stored as JSON in the MPR. Requires AgentEditorCommons, Mendix 11.9+.
+mendix-alter-page	.claude/skills/mendix/alter-page.md	Use when modifying an existing page or snippet's widget tree in-place with ALTER PAGE / ALTER SNIPPET (SET, INSERT, DROP, REPLACE) instead of recreating it.
+mendix-assess-migration	.claude/skills/mendix/assess-migration.md	Use when investigating an existing non-Mendix application to produce a structured assessment for migrating it to Mendix.
+mendix-assess-quality	.claude/skills/mendix/assess-quality.md	Use when performing a comprehensive quality assessment of a Mendix project against best practices (naming, security, performance, maintainability, architecture).
+mendix-browse-integrations	.claude/skills/mendix/browse-integrations.md	Use when discovering external services and querying integration assets via the MDL CATALOG keyword (SELECT ... FROM CATALOG.*). Not the external Mendix Catalog CLI.
+mendix-bulk-widget-updates	.claude/skills/mendix/bulk-widget-updates.md	Use when discovering and bulk-editing widget properties across many pages/snippets with show widgets / update widgets (experimental; dry run first).
+mendix-business-events	.claude/skills/mendix/business-events.md	Use when defining event-driven APIs with business events over Kafka or message brokers (SHOW/DESCRIBE/CREATE/DROP).
+mendix-catalog-search	.claude/skills/mendix/catalog-search.md	Use when searching the external Mendix Catalog service registry (catalog.mendix.com via mxcli catalog search). Requires platform auth. Not the MDL CATALOG keyword.
+mendix-cheatsheet-errors	.claude/skills/mendix/cheatsheet-errors.md	Use when debugging common MDL syntax errors — quick symptom-to-fix lookups for variable, entity, and association mistakes.
+mendix-cheatsheet-variables	.claude/skills/mendix/cheatsheet-variables.md	Use when declaring variables in MDL microflows or fixing variable-declaration errors — quick syntax reference.
+mendix-check-syntax	.claude/skills/mendix/check-syntax.md	Use before presenting or executing any MDL script — pre-flight validation checklist with mxcli check (and --references).
+mendix-connect-rapidminer-graph	.claude/skills/mendix/connect-rapidminer-graph.md	Use when fetching data from a RapidMiner graph mart or any SPARQL 1.1 HTTP endpoint (e.g. AnzoGraph) and surfacing it in a Mendix app.
+mendix-create-custom-widget	.claude/skills/mendix/create-custom-widget.md	Use when building a Mendix pluggable widget from scratch with React + TypeScript, producing a .mpk for Studio Pro.
+mendix-create-page	.claude/skills/mendix/create-page.md	Use when writing CREATE PAGE statements — page and widget MDL syntax reference.
+mendix-custom-widgets	.claude/skills/mendix/custom-widgets.md	Use when writing MDL for GALLERY, COMBOBOX, DataGrid2, or other built-in/third-party pluggable widgets in CREATE PAGE / ALTER PAGE, including child slots and adding new widgets via .def.json.
+mendix-database-connections	.claude/skills/mendix/database-connections.md	Use when setting up external database connections (Oracle, PostgreSQL, MySQL, SQL Server) via the Mendix External Database Connector and mapping SQL results to non-persistent entities.
+mendix-debug-bson	.claude/skills/mendix/debug-bson.md	Use when debugging BSON serialization issues while implementing or fixing Mendix SDK writers.
+mendix-demo-data	.claude/skills/mendix/demo-data.md	Use for any database/import or demo-data work — connect to the Mendix app's PostgreSQL directly, understand the Mendix ID system and association storage, and seed data.
+mendix-docker-workflow	.claude/skills/mendix/docker-workflow.md	Use when building, running, and testing a Mendix app with Docker inside a devcontainer.
+mendix-fragments	.claude/skills/mendix/fragments.md	Use when defining and reusing widget groups across pages with 'define fragment'.
+mendix-generate-domain-model	.claude/skills/mendix/generate-domain-model.md	Use when generating a full Mendix domain model (entities, attributes, associations, enumerations) in MDL and validating it with the linter.
+mendix-java-actions	.claude/skills/mendix/java-actions.md	Use when creating or calling custom Java actions in Mendix projects via MDL.
+mendix-java-dependencies	.claude/skills/mendix/java-dependencies.md	Use when adding, updating, or removing Maven/JAR dependencies for a Mendix module (Studio Pro Module Settings → Java dependencies).
+mendix-json-structures-and-mappings	.claude/skills/mendix/json-structures-and-mappings.md	Use when creating or describing JSON structures, import mappings, and export mappings in MDL, and mapping JSON to entities.
+mendix-manage-navigation	.claude/skills/mendix/manage-navigation.md	Use when inspecting or modifying navigation profiles — home pages, menu items, login pages, role-based routing.
+mendix-manage-security	.claude/skills/mendix/manage-security.md	Use when configuring Mendix security via MDL — module/user roles, access rules (microflows, pages, entities), project security settings, demo users, GRANT/REVOKE.
+mendix-master-detail-pages	.claude/skills/mendix/master-detail-pages.md	Use when building master-detail page layouts (selectable master list plus detail panel).
+mendix-mdl-entities	.claude/skills/mendix/mdl-entities.md	Use when creating entities, attributes, and associations — complete entity/attribute/association MDL syntax reference.
+mendix-migrate-k2-nintex	.claude/skills/mendix/migrate-k2-nintex.md	Use when assessing or migrating K2 / Nintex K2 applications to Mendix with MDL.
+mendix-migrate-oracle-forms	.claude/skills/mendix/migrate-oracle-forms.md	Use when assessing or migrating Oracle Forms applications to Mendix with MDL.
+mendix-odata-data-sharing	.claude/skills/mendix/odata-data-sharing.md	Use when sharing data between Mendix apps via OData services, using view entities to decouple the API contract from the domain model.
+mendix-organize-project	.claude/skills/mendix/organize-project.md	Use when organizing project documents into folders or moving pages/microflows/snippets between folders and modules (MOVE command).
+mendix-overview-pages	.claude/skills/mendix/overview-pages.md	Use when building standard CRUD overview and edit pages (list/grid pattern with navigation snippet).
+mendix-patterns-crud	.claude/skills/mendix/patterns-crud.md	Use when implementing Create/Read/Update/Delete microflow logic — standard CRUD action patterns and naming conventions.
+mendix-patterns-data-processing	.claude/skills/mendix/patterns-data-processing.md	Use when processing lists of data — loops, aggregates, batch processing, delta merge, and list-operation patterns. Read before writing list-processing microflows.
+mendix-project-settings	.claude/skills/mendix/project-settings.md	Use when configuring project settings — database connections, constants, runtime settings (SHOW/DESCRIBE/ALTER).
+mendix-resolve-forward-references	.claude/skills/mendix/resolve-forward-references.md	Use when an MDL script fails because it references a document created later in the same script — ordering and forward-reference resolution.
+mendix-rest-call-from-json	.claude/skills/mendix/rest-call-from-json.md	Use when generating the full REST integration stack from a JSON payload — JSON Structure → entities → import mapping → microflow (inline REST CALL approach).
+mendix-rest-client	.claude/skills/mendix/rest-client.md	Use when integrating with external REST APIs from Mendix microflows — covers the three calling approaches.
+mendix-run-app	.claude/skills/mendix/run-app.md	Use when building and starting the Mendix app in Docker.
+mendix-runtime-admin-api	.claude/skills/mendix/runtime-admin-api.md	Use when calling the Mendix M2EE runtime admin API (port 8090) directly, for example with curl.
+mendix-system-module	.claude/skills/mendix/system-module.md	Use when referencing built-in Mendix System module entities (users, files, workflows, task queues, HTTP) in microflows, pages, associations, or Java actions.
+mendix-test-app	.claude/skills/mendix/test-app.md	Use when verifying a running Mendix app end-to-end with playwright-cli browser automation and mxcli oql data assertions.
+mendix-test-microflows	.claude/skills/mendix/test-microflows.md	Use for testing work — writing and running MDL-based microflow tests with mxcli test (.test.mdl/.test.md; requires Docker).
+mendix-theme-styling	.claude/skills/mendix/theme-styling.md	Use when working with SCSS theming — custom-variables.scss, themesource/ directories, SCSS compilation and caveats.
+mendix-validation-microflows	.claude/skills/mendix/validation-microflows.md	Use when creating validation microflows that validate user input on NewEdit pages and return feedback.
+mendix-verify-with-oql	.claude/skills/mendix/verify-with-oql.md	Use when verifying microflow side effects and data changes with OQL queries against a running Mendix app.
+mendix-write-lint-rules	.claude/skills/mendix/write-lint-rules.md	Use when writing custom Starlark lint rules (.star) in .claude/lint-rules/ that run with mxcli lint.
+mendix-write-microflows	.claude/skills/mendix/write-microflows.md	Use before writing any microflow — comprehensive microflow MDL syntax, common mistakes, and validation checklist.
+mendix-write-nanoflows	.claude/skills/mendix/write-nanoflows.md	Use before writing any nanoflow — client-side nanoflow MDL syntax, restrictions, disallowed activities, and validation checklist.
+mendix-write-oql-queries	.claude/skills/mendix/write-oql-queries.md	Use when creating VIEW entities — correct OQL query syntax that executes in the Mendix runtime.
+mendix-xpath-constraints	.claude/skills/mendix/xpath-constraints.md	Use when writing XPath constraint expressions in RETRIEVE WHERE clauses, page data sources, or security rules — association paths, nested predicates, functions.

@@ -1,0 +1,695 @@
+---
+name: implement-mdl-bson-storage
+description: "Use when implementing new MDL commands that read from or write to MPR files — full stack from grammar to BSON serialization, including storage-name gotchas."
+---
+<!-- generated-by: generate-skillmd.sh (edit skill-descriptions.tsv in this tool's directory, not this file) -->
+
+# Implement MDL with BSON Storage
+
+Use this skill when implementing new MDL commands that read from or write to MPR files. This covers the full stack from grammar to BSON serialization.
+
+## When to Use This Skill
+
+- Adding a new document type (microflows, pages, workflows, etc.)
+- Adding new properties to existing types
+- Implementing new MDL commands (CREATE, ALTER, DROP, SHOW, DESCRIBE)
+- Fixing BSON serialization issues
+
+## Architecture Overview
+
+```
+MDL Command → Grammar → AST → Executor → SDK Types → BSON → MPR File
+     ↑                                        ↓
+   User                                  Studio Pro
+```
+
+**Key files:**
+| Layer | Files |
+|-------|-------|
+| Grammar | `mdl/grammar/MDLLexer.g4`, `mdl/grammar/MDLParser.g4` |
+| AST | `mdl/ast/ast.go` |
+| Visitor | `mdl/visitor/visitor.go` |
+| Executor | `mdl/executor/*.go` |
+| SDK Types | `sdk/domainmodel/`, `sdk/microflows/`, `sdk/pages/` |
+| Parser | `sdk/mpr/parser.go` |
+| Writer | `sdk/mpr/writer.go` |
+| Reader | `sdk/mpr/reader.go` |
+
+## Step 1: Study the Metamodel
+
+Before implementing, understand the Mendix metamodel structure.
+
+### Fast Metadata Inspection with mx dump-mpr
+
+`mx dump-mpr` exports project units as JSON — the fastest way to verify what Studio Pro actually stores before writing any parsing or serialisation code.
+
+```bash
+# Dump all microflow objects for a specific type (shows real field names and types)
+~/.mxcli/mxbuild/11.9.0/modeler/mx dump-mpr \
+    --unit-type=Microflows$InheritanceSplit \
+    /path/to/app.mpr 2>/dev/null | python3 -m json.tool | head -80
+
+# Dump a specific module (System module included by default)
+~/.mxcli/mxbuild/11.9.0/modeler/mx dump-mpr \
+    --module-names=System \
+    --unit-type=JavaActions$JavaAction \
+    /path/to/app.mpr 2>/dev/null | python3 -m json.tool
+
+# Exclude System module (project only)
+~/.mxcli/mxbuild/11.9.0/modeler/mx dump-mpr \
+    --exclude-system-module \
+    /path/to/app.mpr 2>/dev/null | python3 -m json.tool
+```
+
+**Important:** Exit code 4 means the mxbuild version doesn't match the project version — use the version that matches the project's `mxCliVersion` in the MPR metadata.
+
+Use `dump-mpr` to answer:
+- What is the exact BSON field name Studio Pro uses? (e.g. `OutputVariableName` vs `VariableName`)
+- Is this field a string, binary UUID, or embedded document?
+- What does the System module expose for built-in types (entities, Java actions)?
+- What array prefix value does Studio Pro write?
+
+### Find Type Definition
+
+```bash
+# Search for a type in reflection data
+grep -A 50 '"Microflows\$Microflow"' reference/mendixmodellib/reflection-data/11.6.0-structures.json | head -60
+```
+
+### Key Metamodel Fields
+
+```json
+{
+  "Microflows$Microflow": {
+    "qualifiedName": "Microflows$Microflow",
+    "storageName": "Microflows$Microflow",    // ← Use for $Type in BSON
+    "properties": {
+      "objectCollection": {
+        "name": "objectCollection",
+        "storageName": "ObjectCollection",    // ← Use for BSON field name
+        "typeInfo": {
+          "type": "ELEMENT",
+          "elementType": "Microflows$MicroflowObjectCollection",
+          "kind": "PART"                       // ← Determines reference format
+        }
+      }
+    }
+  }
+}
+```
+
+### Reference Kinds
+
+| Kind | BSON Format | Go Type |
+|------|-------------|---------|
+| `PART` | Embedded document | Struct pointer |
+| `BY_ID_REFERENCE` | Binary UUID | `model.ID` (serialize as BSON Binary) |
+| `BY_NAME_REFERENCE` | String | `string` (qualified name like "Module.Entity") |
+| `LOOKUP` | String | `string` |
+
+### Looking Up Reference Kind in Metamodel
+
+**Critical:** Always check the `kind` field in the metamodel before implementing references.
+Getting this wrong causes "Value cannot be null" or similar errors in `mx check`.
+
+```bash
+# Search for property definition
+grep -A 20 '"entity"' reference/mendixmodellib/reflection-data/11.6.0-structures.json | grep -A 10 'DataTypes\$ListType'
+```
+
+Example discovery - `DataTypes$ListType.entity`:
+```json
+"entity" : {
+  "name" : "entity",
+  "storageName" : "Entity",
+  "typeInfo" : {
+    "type" : "ELEMENT",
+    "elementType" : "DomainModels$Entity",
+    "kind" : "BY_NAME_REFERENCE"    // ← This is the critical field!
+  }
+}
+```
+
+This means `Entity` must be serialized as `"MyModule.MyEntity"` (string), NOT as a binary UUID.
+
+**Real example from debugging session:**
+- We incorrectly serialized ListType.Entity as binary UUID
+- `mx check` error: `"Value cannot be null. (Parameter 'value') at Mendix.Modeler.DataTypes.EntityType.set_EntityId"`
+- Fix: Changed to string qualified name format
+
+You can also check `reference/mendixmodellib/src/mpr/mprJsonConversion.js` for the TypeScript implementation:
+```javascript
+case "BY_NAME_REFERENCE":
+case "LOCAL_BY_NAME_REFERENCE":
+    return value || "";  // Just passes string through, not binary
+```
+
+### Audit Similar Types
+
+When you fix a BY_NAME_REFERENCE bug in one type, **immediately audit all similar types**.
+
+Example: When we fixed `DataTypes$ListType.entity`, we should have checked:
+- `DataTypes$ObjectType.entity` - Same bug! Also BY_NAME_REFERENCE
+- `DataTypes$EnumerationType.enumeration` - Same pattern! Also BY_NAME_REFERENCE
+
+```bash
+# Find all entity references that might be BY_NAME_REFERENCE
+grep -B 5 '"BY_NAME_REFERENCE"' reference/mendixmodellib/reflection-data/11.6.0-structures.json | grep -E '"(name|storageName)"'
+```
+
+### Context-Specific Type Interpretation
+
+The same grammar construct can have different semantic meanings in different contexts.
+
+**Example: Bare qualified name (e.g., `MyModule.MyName`)**
+
+| Context | Interpretation | AST Type |
+|---------|----------------|----------|
+| Domain model attribute | Enumeration reference | `TypeEnumeration` |
+| Microflow parameter | Entity reference | `TypeEntity` |
+| Microflow return type | Entity reference | `TypeEntity` |
+
+**Solution:** Create context-specific builder functions:
+- `buildDataType()` - For domain model attributes (bare name → enumeration)
+- `buildMicroflowDataType()` - For microflow params/returns (bare name → entity)
+
+```go
+// In visitor.go - microflow context treats bare qualified names as entities
+func buildMicroflowDataType(ctx parser.IDataTypeContext) ast.DataType {
+    // ...
+    // Handle bare qualified name - in microflow context, this is an ENTITY reference
+    if qn := dtCtx.QualifiedName(); qn != nil {
+        name := buildQualifiedName(qn)
+        return ast.DataType{Kind: ast.TypeEntity, EntityRef: &name}
+    }
+    // ...
+}
+```
+
+## Step 2: Create Go Types
+
+Create types in the appropriate `sdk/` package.
+
+### Example: New Element Type
+
+```go
+// sdk/newdomain/types.go
+package newdomain
+
+import "github.com/ako/modelsdk-go/model"
+
+// NewElement represents a new element type.
+type NewElement struct {
+    model.BaseElement
+    ContainerID   model.ID `json:"containerId"`
+    Name          string   `json:"name"`
+    Documentation string   `json:"documentation,omitempty"`
+
+    // BY_ID_REFERENCE - stored as binary UUID
+    TargetID      model.ID `json:"targetId,omitempty"`
+
+    // BY_NAME_REFERENCE - stored as qualified name string
+    TargetRef     string   `json:"targetRef,omitempty"`
+
+    // PART - embedded child elements
+    Children      []*ChildElement `json:"children,omitempty"`
+}
+
+// GetName returns the element's name.
+func (e *NewElement) GetName() string {
+    return e.Name
+}
+
+// GetContainerID returns the container ID.
+func (e *NewElement) GetContainerID() model.ID {
+    return e.ContainerID
+}
+```
+
+## Step 3: Implement BSON Parsing
+
+Add parsing logic in `sdk/mpr/parser.go`.
+
+### Parse Function Pattern
+
+```go
+func parseNewElement(raw bson.M) *newdomain.NewElement {
+    elem := &newdomain.NewElement{}
+
+    // Parse $ID (always present)
+    if id, ok := raw["$ID"]; ok {
+        elem.ID = bsonBinaryToID(id)
+    }
+
+    // Parse simple fields
+    if name, ok := raw["Name"].(string); ok {
+        elem.Name = name
+    }
+
+    // Parse BY_ID_REFERENCE (binary UUID)
+    if targetID, ok := raw["TargetPointer"]; ok {
+        elem.TargetID = bsonBinaryToID(targetID)
+    }
+
+    // Parse BY_NAME_REFERENCE (string)
+    if targetRef, ok := raw["Target"].(string); ok {
+        elem.TargetRef = targetRef
+    }
+
+    // Parse PART (embedded document)
+    if childRaw, ok := raw["Child"].(bson.M); ok {
+        elem.Child = parseChildElement(childRaw)
+    }
+
+    // Parse array with prefix
+    if childrenRaw, ok := raw["Children"].(bson.A); ok {
+        for i, item := range childrenRaw {
+            if i == 0 { continue } // Skip array prefix
+            if childMap, ok := item.(bson.M); ok {
+                elem.Children = append(elem.Children, parseChildElement(childMap))
+            }
+        }
+    }
+
+    return elem
+}
+```
+
+### Register in Type Switch
+
+```go
+// In parseDomainModel or appropriate parse function
+switch typeName {
+case "NewDomain$NewElement":
+    return parseNewElement(raw)
+// ... other cases
+}
+```
+
+## Step 4: Implement BSON Serialization
+
+Add serialization in `sdk/mpr/writer.go`.
+
+### Serialization Pattern
+
+```go
+func serializeNewElement(elem *newdomain.NewElement, moduleName string) bson.D {
+    // Use bson.D for ordered fields (critical for some types)
+    doc := bson.D{
+        {Key: "$ID", Value: idToBsonBinary(string(elem.ID))},
+        {Key: "$Type", Value: "NewDomain$NewElementImpl"},  // ← Use storageName!
+        {Key: "Name", Value: elem.Name},
+    }
+
+    // Add optional fields
+    if elem.Documentation != "" {
+        doc = append(doc, bson.E{Key: "Documentation", Value: elem.Documentation})
+    }
+
+    // BY_ID_REFERENCE - serialize as BSON Binary
+    if elem.TargetID != "" {
+        doc = append(doc, bson.E{
+            Key: "TargetPointer",
+            Value: idToBsonBinary(string(elem.TargetID)),
+        })
+    }
+
+    // BY_NAME_REFERENCE - serialize as qualified name string
+    if elem.TargetRef != "" {
+        doc = append(doc, bson.E{Key: "Target", Value: elem.TargetRef})
+    }
+
+    // Array with prefix
+    children := bson.A{int32(3)}  // Array prefix
+    for _, child := range elem.Children {
+        children = append(children, serializeChildElement(child))
+    }
+    doc = append(doc, bson.E{Key: "Children", Value: children})
+
+    return doc
+}
+```
+
+### Critical Serialization Rules
+
+1. **Use `storageName` for `$Type`** - Not `qualifiedName`
+2. **Use `bson.D` for ordered fields** - Some types require specific order
+3. **Array prefix** - Arrays need `int32(2)` or `int32(3)` as first element
+4. **BY_NAME_REFERENCE format** - `"Module.Entity.Attribute"` not UUID
+
+## Step 5: Add MDL Grammar
+
+### Add Tokens (MDLLexer.g4)
+
+```antlr
+// Keywords (case-insensitive using fragments)
+NEWELEMENT: N E W E L E M E N T;
+
+// Fragments for case-insensitivity
+fragment N: [nN];
+fragment E: [eE];
+fragment W: [wW];
+// ... etc
+```
+
+### Add Parser Rules (MDLParser.g4)
+
+```antlr
+createNewElementStmt
+    : CREATE NEWELEMENT qualifiedName LPAREN
+        newElementBody
+      RPAREN
+    ;
+
+newElementBody
+    : newElementProperty (COMMA newElementProperty)*
+    ;
+
+newElementProperty
+    : IDENTIFIER COLON propertyValue
+    ;
+```
+
+### Regenerate Parser
+
+```bash
+cd mdl/grammar
+antlr4 -Dlanguage=Go -package parser -o parser MDLLexer.g4 MDLParser.g4
+```
+
+## Step 6: Add AST Types
+
+Add AST nodes in `mdl/ast/ast.go`:
+
+```go
+// CreateNewElementStmt represents CREATE NEWELEMENT statement.
+type CreateNewElementStmt struct {
+    Name       *QualifiedName
+    Properties []*Property
+}
+
+func (s *CreateNewElementStmt) stmtNode() {}
+```
+
+## Step 7: Implement Visitor
+
+Add listener methods in `mdl/visitor/visitor.go`:
+
+```go
+func (v *ASTBuilder) ExitCreateNewElementStmt(ctx *parser.CreateNewElementStmtContext) {
+    stmt := &ast.CreateNewElementStmt{
+        Name: v.buildQualifiedName(ctx.QualifiedName()),
+    }
+
+    // Build properties from context
+    for _, propCtx := range ctx.AllNewElementProperty() {
+        stmt.Properties = append(stmt.Properties, v.buildProperty(propCtx))
+    }
+
+    v.currentStmt = stmt
+}
+```
+
+## Step 8: Implement Executor
+
+Add execution logic in `mdl/executor/`:
+
+```go
+// cmd_newelements.go
+func (e *Executor) execCreateNewElement(s *ast.CreateNewElementStmt) error {
+    if e.writer == nil {
+        return fmt.Errorf("not connected to a project")
+    }
+
+    moduleName := s.Name.Module
+    module, err := e.findModule(moduleName)
+    if err != nil {
+        return err
+    }
+
+    // Create element
+    elem := &newdomain.NewElement{
+        BaseElement: model.BaseElement{ID: model.ID(mpr.GenerateID())},
+        Name:        s.Name.Name,
+    }
+
+    // Set properties from AST
+    for _, prop := range s.Properties {
+        switch prop.Name {
+        case "Documentation":
+            elem.Documentation = prop.Value.(string)
+        // ... other properties
+        }
+    }
+
+    // Write to project
+    if err := e.writer.CreateNewElement(module.ID, elem); err != nil {
+        return err
+    }
+
+    fmt.Fprintf(e.output, "Created new element: %s.%s\n", moduleName, elem.Name)
+    return nil
+}
+```
+
+### Register in Execute Switch
+
+```go
+// In executor.go Execute method
+case *ast.CreateNewElementStmt:
+    return e.execCreateNewElement(s)
+```
+
+## Step 9: Add Reader/Writer Methods
+
+### Reader Method
+
+```go
+// sdk/mpr/reader.go
+func (r *Reader) ListNewElements(moduleID model.ID) ([]*newdomain.NewElement, error) {
+    // Query database and parse BSON
+}
+```
+
+### Writer Method
+
+```go
+// sdk/mpr/writer.go
+func (w *Writer) CreateNewElement(moduleID model.ID, elem *newdomain.NewElement) error {
+    // Serialize to BSON and write to database/file
+}
+```
+
+## Step 10: Test and Validate
+
+### Build and Test
+
+```bash
+# Build
+go build ./...
+
+# Run tests
+go test ./...
+
+# Test with REPL
+./bin/mxcli -p mx-test-projects/test1-go-app/test1-go.mpr
+```
+
+### Validate with mx check (Fast Feedback Loop)
+
+Use `mx check` for rapid validation without opening Studio Pro:
+
+```bash
+# Validate project after creating/modifying elements
+reference/mxbuild/modeler/mx check mx-test-projects/test1-go-app/test1-go.mpr
+```
+
+Common error patterns:
+- `"Value cannot be null"` - Wrong reference format (BY_ID vs BY_NAME)
+- `"Entity 'X' no longer exists"` - BY_NAME_REFERENCE pointing to missing element
+- `"Error(s) in expression"` - Expression syntax or serialization issue
+
+### Create Fresh Test Projects
+
+When debugging complex issues, create a fresh project to eliminate corruption:
+
+```bash
+# Create new empty project
+cd mx-test-projects
+reference/mxbuild/modeler/mx create-project --app-name test-fresh
+
+# Or use the helper script
+bash ./recreate-app.sh test-fresh
+```
+
+### Debug by Comparing with Studio Pro Output
+
+When serialization fails, compare your output with what Studio Pro produces.
+
+**Preferred approach — `mx dump-mpr`:**
+
+```bash
+# After creating the element in Studio Pro, dump that unit type
+~/.mxcli/mxbuild/<version>/modeler/mx dump-mpr \
+    --unit-type=Microflows$CastAction \
+    /path/to/app.mpr 2>/dev/null | python3 -m json.tool
+```
+
+The JSON output shows every field name, value, and type exactly as stored — no Go code needed. Look for mismatched field names (e.g. `OutputVariableName` vs `VariableName`) or wrong value types (binary vs string).
+
+**Fallback — Go debug script (for complex BSON navigation or v2 MPR mxunit files):**
+
+1. Create the same element manually in Studio Pro
+2. Write a debug script to inspect the BSON:
+
+```go
+// /tmp/inspect_bson.go
+package main
+
+import (
+    "fmt"
+    "os"
+    "path/filepath"
+    "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+func main() {
+    filepath.Walk("mx-test-projects/test-app/mprcontents", func(path string, info os.FileInfo, err error) error {
+        if filepath.Ext(path) != ".mxunit" { return nil }
+        contents, _ := os.ReadFile(path)
+        var d primitive.D
+        bson.Unmarshal(contents, &d)
+
+        // Find specific element type
+        for _, e := range d {
+            if e.Key == "$Type" && e.Value == "YourType$Name" {
+                // Print all fields with their types
+                for _, f := range d {
+                    fmt.Printf("%s: %T = %v\n", f.Key, f.Value, f.Value)
+                }
+            }
+        }
+        return nil
+    })
+}
+```
+
+```bash
+go run /tmp/inspect_bson.go
+```
+
+Key insight: Binary fields show as `primitive.Binary`, strings as `string`. This reveals the expected format.
+
+## Testing
+
+The test framework in `mdl/executor/roundtrip_test.go` provides automated validation:
+
+### Running Tests
+
+```bash
+# Run all roundtrip and mx check tests
+go test -v ./mdl/executor/... -run "Roundtrip|MxCheck" -timeout 120s
+
+# Run just semantic roundtrip tests (faster)
+go test -v ./mdl/executor/... -run "Roundtrip" -timeout 60s
+
+# Run mx check integration tests
+go test -v ./mdl/executor/... -run "MxCheck" -timeout 120s
+```
+
+### Test Categories
+
+| Category | Purpose | Speed |
+|----------|---------|-------|
+| **Roundtrip** | Create → Describe → Verify properties | Fast (~5s) |
+| **MxCheck** | Create → mx check → Verify no errors | Slower (~25s) |
+
+### Adding New Tests
+
+When implementing a new document type or widget, add tests to `roundtrip_test.go`:
+
+```go
+func TestRoundtripNewWidget(t *testing.T) {
+    env := setupTestEnv(t)
+    defer env.teardown()
+
+    pageName := testModule + ".TestNewWidget"
+    env.registerCleanup("page", pageName)
+
+    // Create page with new widget
+    createMDL := `CREATE PAGE ` + pageName + `
+        TITLE 'Test'
+        LAYOUT Atlas_Core.Atlas_Default
+    BEGIN
+        NEWWIDGET (PROPERTY 'value')
+    END;`
+
+    if err := env.executeMDL(createMDL); err != nil {
+        t.Fatalf("Failed to create page: %v", err)
+    }
+
+    // Describe and verify
+    output, err := env.describeMDL(`DESCRIBE PAGE ` + pageName + `;`)
+    if err != nil {
+        t.Fatalf("Failed to describe: %v", err)
+    }
+
+    if !containsProperty(output, "NEWWIDGET") {
+        t.Error("Expected NEWWIDGET in output")
+    }
+}
+```
+
+### MxCheck Test Design
+
+MxCheck tests only fail if errors are **related to newly created artifacts**:
+- Pre-existing project issues are logged but don't fail the test
+- Enables safe refactoring even with known project issues
+- Use `analyzeCheckOutput()` to extract errors and check relevance
+
+## Checklist
+
+- [ ] Studied metamodel for type structure
+- [ ] **Ran `mx dump-mpr --unit-type=<type>`** on a Studio Pro-created example to verify real field names and value types before writing parser/writer
+- [ ] Verified reference `kind` for all element references (BY_ID vs BY_NAME)
+- [ ] Audited similar types for same reference pattern
+- [ ] Created Go types in `sdk/` package
+- [ ] Implemented BSON parsing in `parser.go`
+- [ ] Implemented BSON serialization in `writer.go`
+- [ ] Used `storageName` for `$Type` values
+- [ ] Used correct reference formats (BY_ID vs BY_NAME)
+- [ ] Used context-specific type builders if needed (microflow vs domain model)
+- [ ] Added grammar tokens and rules
+- [ ] Regenerated ANTLR parser
+- [ ] Added AST types
+- [ ] Implemented visitor methods
+- [ ] Implemented executor methods
+- [ ] Added reader/writer methods
+- [ ] `go build ./...` passes
+- [ ] `go test ./...` passes
+- [ ] **Added roundtrip test** for new functionality
+- [ ] `mx check` passes (fast validation)
+- [ ] Studio Pro opens project without errors
+- [ ] Updated BSON mapping documentation
+
+## Common Mistakes
+
+1. **Guessing field names without `mx dump-mpr`**: Always verify the real BSON field name against a Studio Pro-produced MPR before writing any serialisation code — names differ from SDK docs (e.g. `OutputVariableName` vs `VariableName`)
+2. **Wrong `$Type`**: Using `qualifiedName` instead of `storageName`
+3. **Wrong reference format**: BY_ID_REFERENCE needs binary UUID, BY_NAME_REFERENCE needs string
+3. **Missing array prefix**: Arrays need `int32(2)` or `int32(3)` as first element
+4. **Field ordering**: Some types require `bson.D` for ordered serialization
+5. **Missing regeneration**: Forgot to run `antlr4` after grammar changes
+6. **Not auditing similar types**: When fixing one type, check others with same pattern
+7. **Context-blind parsing**: Using same builder for different contexts (microflow vs domain model)
+8. **Wrong field names for responsive weights**: LayoutGridColumn uses `Weight` (not `DesktopWeight`) for desktop width, with `PhoneWeight` and `TabletWeight` for other breakpoints
+9. **Unquoted string expressions**: ClientTemplateParameter.Expression needs single quotes for string literals (`'Hello'` not `Hello`), otherwise causes CE0117 errors
+
+## Reference Files
+
+- Metamodel structures: `reference/mendixmodellib/reflection-data/11.6.0-structures.json`
+- BSON conversion logic: `reference/mendixmodellib/src/mpr/mprJsonConversion.js`
+- BSON mapping docs: `docs/05-mdl-specification/10-bson-mapping.md`
+- Existing implementations: `sdk/domainmodel/`, `sdk/mpr/writer.go`
+- mx tools: `reference/mxbuild/modeler/mx` (check, create-project, build)
