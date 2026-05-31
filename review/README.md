@@ -1,21 +1,21 @@
-# fork-review/
+# review/
 
-Fork-only assessment notes for `huaiyukhaw/mxcli`. **Not part of upstream** (`mendixlabs/mxcli`).
+Personal assessment notes for `huaiyukhaw/mxcli`. **Not part of upstream** (`mendixlabs/mxcli`).
 
 ## Why this folder exists
 
 This is a personal fork that periodically syncs from the official Mendix-maintained repo. To keep
-those syncs (`git merge`/rebase from upstream) conflict-free, **all fork-specific review notes live
-here, in a top-level directory that does not exist upstream**. New files in a new directory can't
-collide with upstream changes.
+those syncs (`git merge`/rebase from upstream) conflict-free, **all review notes live here, in a
+top-level directory that does not exist upstream**. New files in a new directory can't collide with
+upstream changes.
 
-## Fork-safety rule
+## Sync-safety rule
 
 - **Never edit upstream-tracked files** for these reviews (no `docs/`, `CLAUDE.md`, `.claude/`,
-  `README.md`, source). Only add files under `fork-review/`.
-- If you'd rather these notes never enter the fork's history, exclude them locally via
-  `.git/info/exclude` (which is **not** tracked) instead of `.gitignore` (which is). Default here is
-  to commit them on a fork branch so they're versioned.
+  `README.md`, source). Only add files under `review/`.
+- If you'd rather these notes never enter git history, exclude them locally via `.git/info/exclude`
+  (which is **not** tracked) instead of `.gitignore` (which is). Default here is to commit them on a
+  branch so they're versioned.
 
 ## Contents
 
@@ -44,5 +44,5 @@ Pick a recommendation from the latest assessment, then:
    `mdl/grammar/domains/*.g4`, not the prose).
 2. For a real feature, consider promoting it into a proper `docs/11-proposals/` proposal (that *is*
    an upstream-tracked area — fine when you intend to contribute upstream), or keep planning notes
-   here if it's fork-only.
+   here if they're personal-only.
 3. Implement per `.claude/skills/implement-mdl-feature.md`; validate with `mxcli check` + `mx check`.

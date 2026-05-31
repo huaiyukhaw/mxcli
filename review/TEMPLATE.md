@@ -1,6 +1,6 @@
-# mxcli Fork Assessment — TEMPLATE
+# mxcli Assessment — TEMPLATE
 
-> Copy this file to `fork-review/YYYY-MM-DD-assessment.md` and fill it in. This template encodes the
+> Copy this file to `review/YYYY-MM-DD-assessment.md` and fill it in. This template encodes the
 > methodology and the evidence rule so each re-run is consistent and trustworthy.
 
 ## The evidence rule (non-negotiable)
@@ -53,8 +53,8 @@ rule and no `cmd_*.go` handler is Bucket B by definition.
 
 ## Re-run prompt (paste to Claude Code)
 
-> Explore the mxcli repo and refresh the fork assessment. Follow `fork-review/TEMPLATE.md`: run the
+> Explore the mxcli repo and refresh the fork assessment. Follow `review/TEMPLATE.md`: run the
 > 3-axis audit, obey the evidence rule (cite `file:line`, code beats prose, flag stale docs),
 > classify invalid-MDL causes into Bucket A vs B, and save the result to
-> `fork-review/YYYY-MM-DD-assessment.md`. Do **not** edit any upstream-tracked file — only add files
-> under `fork-review/`, so the fork stays cleanly syncable from `mendixlabs/mxcli`.
+> `review/YYYY-MM-DD-assessment.md`. Do **not** edit any upstream-tracked file — only add files
+> under `review/`, so the fork stays cleanly syncable from `mendixlabs/mxcli`.

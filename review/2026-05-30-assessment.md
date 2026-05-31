@@ -1,4 +1,4 @@
-# mxcli Fork Assessment — 2026-05-30
+# mxcli Assessment — 2026-05-30
 
 > **Scope.** A point-in-time review of this fork (`huaiyukhaw/mxcli`, upstream `mendixlabs/mxcli`)
 > focused on two questions: (1) how extensible/accurate is mxcli for *building* Mendix apps, and
@@ -245,5 +245,5 @@ Ordered to attack the user's stated pain (Claude writing invalid MDL) first.
 
 ---
 
-*Generated for the fork. To refresh, see `fork-review/TEMPLATE.md`. Counts and citations verified
+*Generated for the fork. To refresh, see `review/TEMPLATE.md`. Counts and citations verified
 against the working tree on 2026-05-30; re-verify after syncing upstream.*
